@@ -1,0 +1,10 @@
+processed.avi filter=lfs diff=lfs merge=lfs -text
+processed0.avi filter=lfs diff=lfs merge=lfs -text
+processed1.avi filter=lfs diff=lfs merge=lfs -text
+processed2.avi filter=lfs diff=lfs merge=lfs -text
+processed3.avi filter=lfs diff=lfs merge=lfs -text
+raw2.mp4 filter=lfs diff=lfs merge=lfs -text
+raw3.mp4 filter=lfs diff=lfs merge=lfs -text
+test.mp4 filter=lfs diff=lfs merge=lfs -text
+raw1.mp4 filter=lfs diff=lfs merge=lfs -text
+yt-cctv-jersey-[UIYu-KtfziA].webm filter=lfs diff=lfs merge=lfs -text
