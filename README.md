@@ -13,6 +13,20 @@
 
 </div>
 
+<!-- problem-framing:start -->
+
+## Problem and evidence
+
+> **Can the detection-and-tracking pipeline count entrances and exits reliably after frame subsampling, compared with manual event annotations on held-out video?**
+
+**Why it matters:** Counting errors can accumulate even when individual frames look convincing. A useful occupancy prototype needs event-level validation and explicit failure cases.
+
+**Central tension:** Subsampling lowers processing cost but makes motion association harder; a simple centroid rule can confuse crossing people, occlusion and missed detections.
+
+[Full problem and verification plan](PROBLEM.md)
+
+<!-- problem-framing:end -->
+
 ## Highlights
 
 - **Detection:** people in each frame with the TensorFlow Object Detection API (Faster R-CNN Inception-ResNet v2), compared with Detectron2.
