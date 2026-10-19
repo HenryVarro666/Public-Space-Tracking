@@ -10,6 +10,22 @@ TensorFlow
 2. Detectron2_T2.ipynb
 PyTorch
 
+
+
+<!-- problem-framing:start -->
+
+## Problem and evidence
+
+> **Can the detection-and-tracking pipeline count entrances and exits reliably after frame subsampling, compared with manual event annotations on held-out video?**
+
+**Why it matters:** Counting errors can accumulate even when individual frames look convincing. A useful occupancy prototype needs event-level validation and explicit failure cases.
+
+**Central tension:** Subsampling lowers processing cost but makes motion association harder; a simple centroid rule can confuse crossing people, occlusion and missed detections.
+
+[Full problem and verification plan](PROBLEM.md) · [Reusable framing prompt](PROBLEM_PROMPT.md)
+
+<!-- problem-framing:end -->
+
 ## Steps
 ### Compression
 compression.py
