@@ -1,6 +1,41 @@
-# Public-Space-Tracking
-640 Final Project
+<div align="center">
 
+# Public Space Tracking
+
+**Detect, track and count people entering and leaving a public space.**
+
+![Python](https://img.shields.io/badge/Python-3-3776AB?logo=python&logoColor=white)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-Object%20Detection-FF6F00?logo=tensorflow&logoColor=white)
+![Detectron2](https://img.shields.io/badge/Detectron2-PyTorch-EE4C2C?logo=pytorch&logoColor=white)
+[![homepage](https://img.shields.io/badge/homepage-ccao2679.com-555555)](https://www.ccao2679.com/coursework/#public-space-tracking)
+
+<img src="docs/figures/overview.png" alt="Overview poster: compress video, detect people, track centroids, count crossings of an entry line" width="100%">
+
+</div>
+
+## Highlights
+
+- **Detection:** people in each frame with the TensorFlow Object Detection API (Faster R-CNN Inception-ResNet v2), compared with Detectron2.
+- **Tracking and counting:** box centroids are linked across frames by nearest-centroid continuity; a track that crosses the entry line counts as in or out.
+- **Outputs:** annotated detection, counter and optical-flow videos, plus an occupancy heatmap.
+
+<p align="center"><img src="demos/testHeatmap.png" alt="Detected person positions accumulated over a street scene" width="640"></p>
+
+## Pipeline
+
+| Step | Script | What it does |
+|---|---|---|
+| Compress | `compression.py` | Keep the first 5,000 frames and every 5th frame, resolution unchanged |
+| Ingest | `ingestion.py` | Save entrance and exit lines for a camera view to JSON |
+| Detect | `detection.py` | Run a pre-trained detector and save boxes to CSV |
+| Visualize | `detectionVis.py` | Draw boxes on frames and rebuild the video |
+| Count | `counter-builder.ipynb` | Link centroids into tracks and count line crossings |
+| Heatmap | `detectionVis-Heatmap.ipynb` | Accumulate positions into a heatmap |
+
+Detector weights go in `models/` (see the [TF2 detection zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf2_detection_zoo.md)).
+
+<details>
+<summary>Original notes</summary>
 
 ### Test
 
@@ -53,6 +88,4 @@ detectionVis-Heatmap.ipynb
 
 Draw the heatmaps based on bounding boxes. It needs linear transformation in the future to convert it to a top view picture.
 
-
-
-
+</details>
