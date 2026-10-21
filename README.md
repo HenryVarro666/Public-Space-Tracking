@@ -1,6 +1,17 @@
-# Public-Space-Tracking
-640 Final Project
+# Public Space Tracking
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/overview-dark.svg">
+    <img src="docs/overview-light.svg" alt="Overview: people in street video are detected, tracked by centroid and counted as they cross an entry line" width="560">
+  </picture>
+</p>
+
+Course 640 final project: count people entering and leaving a public space from street video.
+People are detected per frame with the TensorFlow Object Detection API (Faster R-CNN
+Inception-ResNet v2) and with Detectron2, tracked by matching bounding-box centroids across
+frames, and counted when their track crosses the entry line; detections also feed an occupancy
+heatmap.
 
 ### Test
 
@@ -52,7 +63,3 @@ By calculating the location of plotline and boundingbox, we can know whether a p
 detectionVis-Heatmap.ipynb
 
 Draw the heatmaps based on bounding boxes. It needs linear transformation in the future to convert it to a top view picture.
-
-
-
-
