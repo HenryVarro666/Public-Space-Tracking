@@ -7,7 +7,7 @@
 ![Python](https://img.shields.io/badge/Python-3-3776AB?logo=python&logoColor=white)
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-Object%20Detection-FF6F00?logo=tensorflow&logoColor=white)
 ![Detectron2](https://img.shields.io/badge/Detectron2-PyTorch-EE4C2C?logo=pytorch&logoColor=white)
-[![homepage](https://img.shields.io/badge/homepage-ccao2679.com-555555)](https://www.ccao2679.com/coursework/#public-space-tracking)
+[![homepage](https://img.shields.io/badge/homepage-ccao2679.com-555555)](https://www.ccao2679.com/projects/#public-space-tracking)
 
 <img src="docs/figures/overview.png" alt="Overview poster: compress video, detect people, track centroids, count crossings of an entry line" width="100%">
 
