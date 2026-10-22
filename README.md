@@ -2,6 +2,8 @@
 
 # Public Space Tracking
 
+**English** · [简体中文](README.zh-CN.md)
+
 **Detect, track and count people entering and leaving a public space.**
 
 ![Python](https://img.shields.io/badge/Python-3-3776AB?logo=python&logoColor=white)
@@ -23,7 +25,7 @@
 
 **Central tension:** Subsampling lowers processing cost but makes motion association harder; a simple centroid rule can confuse crossing people, occlusion and missed detections.
 
-[Full problem and verification plan](PROBLEM.md)
+[Full problem and verification plan](PROBLEM.md) · [中文](PROBLEM.zh.md)
 
 <!-- problem-framing:end -->
 
@@ -34,6 +36,29 @@
 - **Outputs:** annotated detection, counter and optical-flow videos, plus an occupancy heatmap.
 
 <p align="center"><img src="demos/testHeatmap.png" alt="Detected person positions accumulated over a street scene" width="640"></p>
+
+## Architecture
+
+```mermaid
+flowchart TD
+    RAW["dataset/raw1.mp4"] --> CMP["compression.py<br/>keep every Nth frame"]
+    CMP --> PV["dataset/processed1.avi"]
+    PV --> ING["ingestion.py<br/>draw region boxes"]
+    ING --> JSON["project-*-ingestion.json"]
+    PV --> DET["detection.py<br/>Faster R-CNN persons"]
+    JSON -->|"source video"| DET
+    DET --> CSV["detections CSV<br/>frame, box, score"]
+    CSV --> VIS["detectionVis.py<br/>draw boxes"]
+    CSV --> CNT["counter-builder.ipynb<br/>nearest-centroid links"]
+    CSV --> HM["detectionVis-Heatmap.ipynb<br/>collect centroids"]
+    JSON -->|"region boxes"| CNT
+    VIS --> O1["demo-1 video<br/>boxed frames"]
+    CNT --> O2["testCounter.avi<br/>enter and leave links"]
+    CNT --> O3["testMotionOpticalFlow.avi<br/>all links"]
+    HM --> O4["testHeatmap.png<br/>centroid dots"]
+```
+
+Each step reads the file written by the step above it; `detectionVis.py`, `counter-builder.ipynb` and the heatmap notebook keep only detections scored above 0.8. The counter links each centroid to its nearest neighbour five frames later, keeps links shorter than that frame's mean distance, and marks a link that moves into or out of a region box.
 
 ## Pipeline
 

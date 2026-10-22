@@ -11,3 +11,5 @@
 **Acceptance test:** Annotate entrance/exit events in a permitted video sample, then hold complete clips out of tuning. Compare the current centroid tracker with detection-only counting and a clearly specified association baseline at matched detections. Vary frame stride while recording event precision/recall, cumulative count error, identity switches and runtime. Separate occluded and crossing-person cases. If speed gains cause unacceptable count drift, reduce stride or improve association before extending deployment.
 
 This is a prospective engineering test; no identification or surveillance capability is claimed.
+
+中文版：[PROBLEM.zh.md](PROBLEM.zh.md)
