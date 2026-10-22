@@ -4,14 +4,14 @@
 
 **English** · [简体中文](README.zh-CN.md)
 
-**Detect, track and count people entering and leaving a public space.**
+**Detect people in street video, link their centroids across frames and mark moves into or out of chosen regions.**
 
 ![Python](https://img.shields.io/badge/Python-3-3776AB?logo=python&logoColor=white)
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-Object%20Detection-FF6F00?logo=tensorflow&logoColor=white)
 ![Detectron2](https://img.shields.io/badge/Detectron2-PyTorch-EE4C2C?logo=pytorch&logoColor=white)
 [![homepage](https://img.shields.io/badge/homepage-ccao2679.com-555555)](https://www.ccao2679.com/projects/#public-space-tracking)
 
-<img src="docs/figures/overview.png" alt="Overview poster: compress video, detect people, track centroids, count crossings of an entry line" width="100%">
+<img src="docs/figures/overview.png" alt="Overview poster: compress video, detect people, link centroids five frames apart, mark links that enter or leave hand-drawn regions" width="100%">
 
 </div>
 
@@ -31,9 +31,9 @@
 
 ## Highlights
 
-- **Detection:** people in each frame with the TensorFlow Object Detection API (Faster R-CNN Inception-ResNet v2), compared with Detectron2.
-- **Tracking and counting:** box centroids are linked across frames by nearest-centroid continuity; a track that crosses the entry line counts as in or out.
-- **Outputs:** annotated detection, counter and optical-flow videos, plus an occupancy heatmap.
+- **Detection:** people in each frame of the project video, using a Faster R-CNN Inception-ResNet v2 model from the TF2 Detection Zoo (COCO) loaded as a TensorFlow SavedModel. `Object_detection_T1.ipynb` and `Detectron2_T2.ipynb` are the stock TF-Hub and Detectron2 tutorials run on sample images, not a comparison on the project video.
+- **Linking and labelling:** each box centroid is linked to the nearest centroid five frames later, and links longer than that frame's mean link length are dropped. A link that starts outside a rectangle drawn in `ingestion.py` and ends inside it is marked as entering (the reverse as leaving). No in/out totals are computed.
+- **Outputs:** a video with detection boxes, a counter video showing the entering and leaving links, a video of all centroid links (`testMotionOpticalFlow.avi`) and an image with every detected centroid drawn as a dot.
 
 <p align="center"><img src="demos/testHeatmap.png" alt="Detected person positions accumulated over a street scene" width="640"></p>
 
@@ -64,12 +64,12 @@ Each step reads the file written by the step above it; `detectionVis.py`, `count
 
 | Step | Script | What it does |
 |---|---|---|
-| Compress | `compression.py` | Keep the first 5,000 frames and every 5th frame, resolution unchanged |
-| Ingest | `ingestion.py` | Save entrance and exit lines for a camera view to JSON |
-| Detect | `detection.py` | Run a pre-trained detector and save boxes to CSV |
+| Compress | `compression.py` | Keep the first N frames and every k-th frame (entered at a prompt, e.g. 5,000 and 5), resolution unchanged |
+| Ingest | `ingestion.py` | Draw entrance and exit rectangles on a frame with the mouse and save them to JSON |
+| Detect | `detection.py` | Run the pre-trained Faster R-CNN, keep the person class and save boxes to CSV |
 | Visualize | `detectionVis.py` | Draw boxes on frames and rebuild the video |
-| Count | `counter-builder.ipynb` | Link centroids into tracks and count line crossings |
-| Heatmap | `detectionVis-Heatmap.ipynb` | Accumulate positions into a heatmap |
+| Link | `counter-builder.ipynb` | Link each centroid to the nearest one five frames later and mark links that enter or leave a rectangle |
+| Heatmap | `detectionVis-Heatmap.ipynb` | Draw every detection centroid as a dot on one frame |
 
 Detector weights go in `models/` (see the [TF2 detection zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf2_detection_zoo.md)).
 

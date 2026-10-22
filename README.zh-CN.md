@@ -4,14 +4,14 @@
 
 [English](README.md) · **简体中文**
 
-**检测、跟踪并统计进出公共空间的人数。**
+**在街景视频中检测行人，跨帧连接质心，并标记进入或离开选定区域的移动。**
 
 ![Python](https://img.shields.io/badge/Python-3-3776AB?logo=python&logoColor=white)
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-Object%20Detection-FF6F00?logo=tensorflow&logoColor=white)
 ![Detectron2](https://img.shields.io/badge/Detectron2-PyTorch-EE4C2C?logo=pytorch&logoColor=white)
 [![homepage](https://img.shields.io/badge/homepage-ccao2679.com-555555)](https://www.ccao2679.com/projects/#public-space-tracking)
 
-<img src="docs/figures/overview.png" alt="项目概览海报：压缩视频、检测行人、跟踪质心、统计穿过入口线的次数" width="100%">
+<img src="docs/figures/overview.png" alt="项目概览海报：压缩视频、检测行人、连接相隔五帧的质心、标记进入或离开手绘区域的连线" width="100%">
 
 </div>
 
@@ -31,9 +31,9 @@
 
 ## 亮点
 
-- **检测：** 用 TensorFlow Object Detection API（Faster R-CNN Inception-ResNet v2）检测每一帧中的行人，并与 Detectron2 做对比。
-- **跟踪与计数：** 按最近质心的连续性把各帧检测框的质心连接起来；穿过入口线的轨迹记为一次进入或离开。
-- **输出：** 带检测框的视频、计数视频和光流视频，以及一张人员分布热力图。
+- **检测：** 用 TF2 Detection Zoo 中的 Faster R-CNN Inception-ResNet v2 模型（COCO，以 TensorFlow SavedModel 加载）检测项目视频每一帧中的行人。`Object_detection_T1.ipynb` 和 `Detectron2_T2.ipynb` 是在示例图片上运行的 TF-Hub 与 Detectron2 官方教程，并不是在项目视频上的对比。
+- **连线与标记：** 把每个检测框质心与五帧之后距离最近的质心相连，长于该帧平均连线长度的连线会被丢弃。若连线从 `ingestion.py` 手绘的矩形外开始、在矩形内结束，就标记为进入（反之为离开）。代码不计算进出总数。
+- **输出：** 带检测框的视频、标出进入与离开连线的计数视频、包含全部质心连线的视频（`testMotionOpticalFlow.avi`），以及一张把所有检测质心画成散点的图片。
 
 <p align="center"><img src="demos/testHeatmap.png" alt="街景中检测到的行人位置累积图" width="640"></p>
 
@@ -64,12 +64,12 @@ flowchart TD
 
 | 步骤 | 脚本 | 作用 |
 |---|---|---|
-| 压缩 | `compression.py` | 保留前 5,000 帧，每 5 帧取 1 帧，分辨率不变 |
-| 录入 | `ingestion.py` | 把某个摄像头视角下的入口线和出口线保存为 JSON |
-| 检测 | `detection.py` | 运行预训练检测器，把检测框保存为 CSV |
+| 压缩 | `compression.py` | 保留前 N 帧，每 k 帧取 1 帧（运行时输入，例如 5,000 和 5），分辨率不变 |
+| 录入 | `ingestion.py` | 用鼠标在一帧画面上绘制入口和出口矩形，并保存为 JSON |
+| 检测 | `detection.py` | 运行预训练的 Faster R-CNN，只保留 person 类，把检测框保存为 CSV |
 | 可视化 | `detectionVis.py` | 在每帧上绘制检测框，再重新合成视频 |
-| 计数 | `counter-builder.ipynb` | 把质心连接成轨迹，统计越线次数 |
-| 热力图 | `detectionVis-Heatmap.ipynb` | 把位置累积成热力图 |
+| 连线 | `counter-builder.ipynb` | 把每个质心与五帧之后最近的质心相连，并标出进入或离开矩形的连线 |
+| 热力图 | `detectionVis-Heatmap.ipynb` | 把所有检测质心画成散点，叠加在一帧画面上 |
 
 检测器权重放在 `models/` 目录下（见 [TF2 detection zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf2_detection_zoo.md)）。
 
